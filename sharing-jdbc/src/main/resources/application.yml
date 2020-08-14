@@ -1,0 +1,66 @@
+server:
+  port: 7001
+spring:
+  application:
+    name: sharding-test-service
+  shardingsphere:
+    datasource:
+      names: sharding01,sharding02
+      sharding01:
+        url: jdbc:mysql://localhost:3306/sharding01?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&useSSL=false&serverTimezone=GMT
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        username: root
+        password: lzy1216
+      sharding02:
+        url: jdbc:mysql://192.168.136.128:3307/sharding02?useUnicode=true&characterEncoding=utf8&tinyInt1isBit=false&useSSL=false&serverTimezone=GMT
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        username: root
+        password: 123456
+    props:
+      sql:
+        show: true
+    sharding:
+        tables:
+          user:
+              actual-data-nodes: sharding0${1..2}.user_${0..3}  #数据节点
+              database-strategy:  #user分库策略
+                inline:
+                  sharding-column: user_id
+                  algorithm-expression: sharding0${if(user_id>50) 1 else 2}
+              table-strategy:  #user分表策略
+                inline:
+                  shardingColumn: user_id
+                  algorithm-expression: user_${user_id % 4}
+          order:
+                actual-data-nodes: sharding0${1..2}.order0${1..2}  #数据节点
+                database-strategy:
+                  standard:
+                    sharding-column: order_id
+                    precise-algorithm-class-name: com.sharding.Algorithm.orderShardingAlgorithm
+                table-strategy:  #order分表策略
+                  complex:
+                    sharding-columns: order_id,user_id
+                    algorithm-class-name: com.sharding.Algorithm.ComplexKeysSharding
+
+
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.sharding.entity
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8001/eureka/
+      instance:
+        prefer-ip-address: true #跨域访问
+      server:
+        enable-self-preservation: false #自我保护设置，当微服务不再报告状态时，也不会立即将其删除，在开发阶段建议设置false
+        eviction-interval-timer-in-ms: 60000 #服务注册表清理间隔
+logging:
+  config: classpath:logback-spring.xml
+

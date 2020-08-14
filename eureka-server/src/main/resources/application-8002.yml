@@ -1,0 +1,13 @@
+server:
+  port: 8002
+spring:
+  application:
+    name: eureka-server8002
+  profiles:
+    active: test1
+eureka:
+  client:
+    registerWithEureka: false #服务注册，是否将自己注册到Eureka服务中
+    fetchRegistry: false #服务发现，是否从Eureka中获取注册信息
+    serviceUrl: #Eureka客户端与Eureka服务端的交互地址，高可用状态配置对方的地址，单机状态配置自己（如果不配置则默认本机8761端口）
+      defaultZone: http://localhost:8001/eureka/

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sharding.Dao.userDao">
+    <resultMap id="usermap" type="com.sharding.entity.User">
+        <id property="user_id" column="user_id"></id>
+        <result property="username" column="username" javaType="String" jdbcType="VARCHAR"/>
+        <result property="password" column="password" javaType="String" jdbcType="VARCHAR"/>
+    </resultMap>
+    <insert id="InsertUser" parameterType="com.sharding.entity.User" useGeneratedKeys="true">
+        insert into user(user_id,username,password) values (#{user_id},#{username},#{password})
+    </insert>
+</mapper>

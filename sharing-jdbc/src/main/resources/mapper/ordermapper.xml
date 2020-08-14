@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sharding.Dao.orderDao">
+    <resultMap id="usermap" type="com.sharding.entity.Order">
+        <id property="order_id" column="order_id" javaType="long" jdbcType="BIGINT"></id>
+        <result property="user_id" column="user_id" javaType="int" jdbcType="INTEGER"></result>
+        <result property="description" column="descripyion" javaType="String" jdbcType="VARCHAR"/>
+        <result property="create_time" column="create_time" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <insert id="InsertOrder" parameterType="com.sharding.entity.Order" >
+        insert into order(order_id,user_id,description,create_time) values (#{order_id},#{user_id},#{description},#{create_time})
+    </insert>
+</mapper>
